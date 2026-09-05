@@ -19,6 +19,15 @@ YOLOv8s/inference/logs/
 YOLOv8s/local_test/_webcam_shots/
 YOLOv8s/local_test/_smoke/
 
+# 로컬 웹캠+대시보드 데모 (D:\Silo_Robot\local_webcam_demo) 산출물 — 코드만 커밋
+# (주의: .gitignore는 패턴 뒤에 같은 줄 주석을 못 씀 — 전부 패턴 문자열로 취급됨)
+local_webcam_demo/dashboard/build/
+local_webcam_demo/live_frame*.jpg
+local_webcam_demo/live_frame*.tmp
+local_webcam_demo/*.log
+local_webcam_demo/_diag*/
+local_webcam_demo/__pycache__/
+
 # ── Python ───────────────────────────────────────────────────────────────
 __pycache__/
 *.pyc
