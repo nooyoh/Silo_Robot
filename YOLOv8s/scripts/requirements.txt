@@ -1,0 +1,9 @@
+# 로컬(전처리·검증) 의존성. 학습은 Colab 노트북이 별도로 설치.
+ultralytics==8.4.56
+opencv-python
+numpy
+pyyaml
+roboflow            # fetch_roboflow.py 에서만 필요
+onnx                # onnx_parity_check.py
+onnxruntime         # onnx_parity_check.py
+nbformat            # 노트북 재생성 시에만

@@ -1,0 +1,35 @@
+# ── 데이터/모델 (크고 GitHub에 올리면 안 되는 것들) ──────────────────────────
+# 원본·가공 데이터셋 전체 (수백MB~GB, zip 포함) — Drive/AI Hub 등 원본 출처에서 재현
+YOLOv8s/Dataset/
+
+# Colab 학습 산출물 (가중치 수십~수백MB) — Google Drive(silorobot_runs)가 원본
+YOLOv8s/runs/
+
+# 로컬/Orin 모델 파일 (어디에 두든 전부 제외)
+*.pt
+*.onnx
+*.engine
+
+# Jetson 배포용 아티팩트·런타임 로그
+YOLOv8s/inference/artifacts/
+YOLOv8s/inference/logs/
+*.jsonl
+
+# 로컬 테스트 산출물
+YOLOv8s/local_test/_webcam_shots/
+YOLOv8s/local_test/_smoke/
+
+# ── Python ───────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# ── Claude Code 로컬 설정 (사용자별, 공유 저장소에 안 올림) ──────────────────
+**/.claude/settings.local.json
+
+# ── OS/에디터 잡파일 ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp

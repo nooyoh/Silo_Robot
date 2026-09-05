@@ -1,0 +1,35 @@
+# Jetson Orin Nano Super — inference/ 실행 환경 (엔진 변환 A안: Ultralytics 기반)
+#
+# 설치 순서가 중요하다 — torch를 pip 기본값으로 깔면 Jetson(ARM+CUDA)에서 동작하지 않는다.
+# 전체 절차는 docs/orin_tensorrt_deploy.md 1~2장 참고.
+#
+# ── 0) 전제: JetPack이 CUDA/cuDNN/TensorRT를 시스템에 이미 설치해둔 상태 ──
+#    pip install tensorrt 금지 (ARM 휠 없음). venv는 --system-site-packages 로 생성.
+#      python3 -m venv --system-site-packages ~/venvs/orin-infer
+#      source ~/venvs/orin-infer/bin/activate
+#
+# ── 1) PyTorch: Jetson 전용 wheel을 먼저 수동 설치 (이 파일로 안 됨) ──
+#    JetPack 버전에 맞는 wheel을 아래서 확인:
+#      https://developer.nvidia.com/embedded/downloads  또는  jetson-ai-lab (dusty-nv)
+#    예:
+#      pip install torch-<version>-cp<py>-cp<py>-linux_aarch64.whl
+#      pip install torchvision-<version>-cp<py>-cp<py>-linux_aarch64.whl
+#    설치 후 반드시 확인:
+#      python3 -c "import torch; print(torch.__version__, torch.cuda.is_available())"
+#      -> torch.cuda.is_available() 이 True 여야 함 (False면 wheel이 잘못된 것)
+#
+# ── 2) 아래는 이 파일로 설치: pip install -r requirements.txt ──
+#    torch를 1)에서 먼저 깔아뒀으면 ultralytics 설치 시 pip가 기존 torch를
+#    유지한다(요구 버전 범위가 넓어서 보통 재설치 안 함). 설치 후 위 torch
+#    확인 커맨드를 한 번 더 돌려서 torch가 안 바뀌었는지 재확인할 것.
+
+ultralytics
+websockets
+numpy
+
+# opencv: pipeline.py 는 cv2.CAP_FFMPEG 로 RTSP를 연다.
+# pip 배포판(opencv-python)은 보통 FFmpeg 지원이 포함돼 있어 우선 이걸로 시도.
+# RTSP 연결이 안 되면(코덱/프로토콜 문제) JetPack 제공 시스템 python3-opencv
+# (GStreamer 포함, apt)로 교체 — 이 경우 opencv-python 은 pip uninstall 하고
+# venv를 --system-site-packages 로 만들어 시스템 cv2가 보이게 해야 함.
+opencv-python
