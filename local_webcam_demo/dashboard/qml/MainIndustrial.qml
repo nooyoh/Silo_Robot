@@ -73,6 +73,11 @@ ApplicationWindow {
         }
         readonly property string liveImagePathA: pingPongPath(dashboard.liveImagePath, "_a")
         readonly property string liveImagePathB: pingPongPath(dashboard.liveImagePath, "_b")
+
+        // 결함 클래스별 오버레이 색 (균열=빨강, 부식=주황).
+        function detectionColor(label) {
+            return label === "corrosion" ? Qt.color("#FF8C00") : Qt.color("#FF3030")
+        }
         readonly property bool cameraActive: useLiveImage || dashboard.rtspUrl !== ""
         readonly property real feedX: useLiveImage
             ? liveImage.x + (liveImage.width - liveImage.paintedWidth) / 2
@@ -130,10 +135,11 @@ ApplicationWindow {
                 width: cameraPanel.feedW
                 height: cameraPanel.feedH
                 visible: modelData.polygon !== undefined && modelData.polygon.length > 2
+                readonly property color maskColor: cameraPanel.detectionColor(modelData.label)
                 ShapePath {
-                    strokeColor: amber
+                    strokeColor: maskShape.maskColor
                     strokeWidth: 2
-                    fillColor: Qt.rgba(0.76, 0.64, 0.42, 0.28)
+                    fillColor: Qt.rgba(maskShape.maskColor.r, maskShape.maskColor.g, maskShape.maskColor.b, 0.28)
                     PathPolyline {
                         path: {
                             const pts = []
@@ -156,9 +162,10 @@ ApplicationWindow {
                 x: cameraPanel.feedX + modelData.x * cameraPanel.feedW
                 y: cameraPanel.feedY + modelData.y * cameraPanel.feedH
                 width: modelData.width * cameraPanel.feedW; height: modelData.height * cameraPanel.feedH
-                Rectangle { anchors.fill: parent; color: "transparent"; border.color: amber; border.width: 2 }
-                Rectangle { anchors.left: parent.left; anchors.bottom: parent.top; height: 19; width: detectionLabel.width + 14; color: amber }
-                Text { id: detectionLabel; anchors.left: parent.left; anchors.leftMargin: 7; anchors.bottom: parent.top; anchors.bottomMargin: 3; text: modelData.label.toUpperCase() + "  " + Math.round(modelData.confidence * 100) + "%"; color: "#241E17"; font.family: "DejaVu Sans Mono"; font.pixelSize: 8; font.bold: true }
+                readonly property color boxColor: cameraPanel.detectionColor(modelData.label)
+                Rectangle { anchors.fill: parent; color: "transparent"; border.color: detectionBox.boxColor; border.width: 2 }
+                Rectangle { anchors.left: parent.left; anchors.bottom: parent.top; height: 19; width: detectionLabel.width + 14; color: detectionBox.boxColor }
+                Text { id: detectionLabel; anchors.left: parent.left; anchors.leftMargin: 7; anchors.bottom: parent.top; anchors.bottomMargin: 3; text: modelData.label.toUpperCase() + "  " + Math.round(modelData.confidence * 100) + "%"; color: "#FFFFFF"; font.family: "DejaVu Sans Mono"; font.pixelSize: 8; font.bold: true }
             }
         }
     }

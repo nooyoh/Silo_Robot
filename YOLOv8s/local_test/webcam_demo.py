@@ -22,6 +22,44 @@ from collections import deque
 from pathlib import Path
 
 import cv2
+import numpy as np
+
+# 클래스별 오버레이 색 (BGR).
+CLASS_COLORS = {
+    0: (0, 0, 255),      # crack — 빨강
+    1: (0, 140, 255),    # corrosion — 주황
+}
+CLASS_NAMES = {0: "crack", 1: "corrosion"}
+
+
+def draw_overlay(frame, result, line_width: int = 2):
+    """results[0].plot() 대신 직접 그리기 — 클래스별 색을 CLASS_COLORS 로 고정."""
+    vis = frame.copy()
+    if result.boxes is None or len(result.boxes) == 0:
+        return vis
+
+    polys = result.masks.xy if result.masks is not None else None
+    overlay = vis.copy()
+    for i, box in enumerate(result.boxes):
+        cid = int(box.cls[0])
+        color = CLASS_COLORS.get(cid, (0, 255, 0))
+        x1, y1, x2, y2 = (int(v) for v in box.xyxy[0].tolist())
+        conf = float(box.conf[0])
+        name = CLASS_NAMES.get(cid, str(cid))
+
+        if polys is not None and i < len(polys) and len(polys[i]) >= 3:
+            pts = polys[i].astype(np.int32)
+            cv2.fillPoly(overlay, [pts], color)
+            cv2.polylines(vis, [pts], True, color, line_width)
+        cv2.rectangle(vis, (x1, y1), (x2, y2), color, line_width)
+
+        label = f"{name} {conf * 100:.0f}%"
+        (tw, th), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 2)
+        cv2.rectangle(vis, (x1, y1 - th - 8), (x1 + tw + 6, y1), color, -1)
+        cv2.putText(vis, label, (x1 + 3, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                    (255, 255, 255), 2)
+
+    return cv2.addWeighted(overlay, 0.35, vis, 0.65, 0)
 
 
 def main() -> int:
@@ -73,7 +111,7 @@ def main() -> int:
             fps_hist.append(1.0 / dt if dt > 0 else 0.0)
             fps = sum(fps_hist) / len(fps_hist)
 
-            vis = results[0].plot(line_width=2)  # 박스+마스크+라벨 오버레이 (ultralytics 내장)
+            vis = draw_overlay(frame, results[0], line_width=2)  # 클래스별 색 고정(부식=마젠타)
             cv2.putText(vis, f"FPS {fps:4.1f}  conf {conf:.2f}  imgsz {args.imgsz}",
                         (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 
