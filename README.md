@@ -36,7 +36,7 @@
 
 ## 🎬 동작영상
 
-<!-- 동작영상 추가 예정 -->
+https://github.com/user-attachments/assets/4b04a61f-2369-4eb1-9aed-ed6f52b937f2
 
 ## 🏗️ 시스템 아키텍처
 
