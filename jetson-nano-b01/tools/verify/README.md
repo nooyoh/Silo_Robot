@@ -3,11 +3,11 @@
 로봇·ROS 없이, **실제로 배포되는 코드 그대로** 자율주행 전체 사슬을 돌려보는 시험대다.
 C 컴파일러와 Python 3만 있으면 노트북에서 몇 초 만에 끝난다.
 
-```bash
-python3 tools/verify/run.py
-```
+`jetson-nano-b01/` 폴더에서 실행하며, STM32 펌웨어 경로는 같은 저장소의 `stm32-f401re/`로 지정한다.
 
-STM32 저장소가 옆 디렉터리(`../stm32-controller`)에 없으면 `--stm32 <경로>`로 지정한다.
+```bash
+python3 tools/verify/run.py --stm32 ../stm32-f401re
+```
 
 ## 왜 만들었나
 
@@ -25,7 +25,7 @@ STM32 저장소가 옆 디렉터리(`../stm32-controller`)에 없으면 `--stm32
 
 - `coverage_planner` / `odometry_node` / `path_follower` / `stm32_uart_bridge` /
   `safety_supervisor` — `src/silorobot_nano/silorobot_nano/`의 실제 소스
-- 아케이드 믹싱·데드존·프레임 파서 — `stm32-controller`의 실제 C를 공유 라이브러리로
+- 아케이드 믹싱·데드존·프레임 파서 — `stm32-f401re`의 실제 C를 공유 라이브러리로
   컴파일해 `ctypes`로 직접 호출
 - 파라미터 — `config/bootstrap.yaml`의 실제 배포 값
 

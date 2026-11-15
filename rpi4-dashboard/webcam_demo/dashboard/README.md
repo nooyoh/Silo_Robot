@@ -1,11 +1,12 @@
-# SiloRobot RPi4 Dashboard
+# SiloRobot Dashboard — 로컬 웹캠 데모용 사본
 
-Raspberry Pi 4 + 7-inch touchscreen dashboard for the SiloRobot crawler.
+`../run_demo.py`(로컬 웹캠 → YOLO 추론 → 대시보드)와 함께 PC에서 실행하는 대시보드 사본이다.
+영상은 RTSP 대신 `run_demo.py`의 MJPEG-HTTP(`/stream.mjpg`)로 받는다.
+실기기(RPi4)용 대시보드는 상위 `rpi4-dashboard/`를 사용한다.
 
 ## Features
 
 - Qt 6 Quick touch UI for a landscape 800×480 display
-- RTSP video display from Jetson Nano B01 (`720p @ 30fps` target)
 - WebSocket server on port `8765`
 - Touch controls: throttle and turn axes (`-100` to `100`), latched emergency stop
 - Robot telemetry (battery, IMU, three distance sensors)
@@ -18,18 +19,12 @@ Raspberry Pi 4 + 7-inch touchscreen dashboard for the SiloRobot crawler.
 - `--demo` mode for UI-only verification before other devices are ready; it never fabricates a
   defect alert
 
-## Build on Raspberry Pi
+## Build
 
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j2
 ./build/silorobot-dashboard --demo
-```
-
-Run with the Nano B01 RTSP source once it is available:
-
-```bash
-./build/silorobot-dashboard --rtsp rtsp://<nano-tailscale-ip>:8554/robot
 ```
 
 ## Connection configuration
@@ -47,8 +42,7 @@ The dashboard listens on every local interface; changing the displayed address d
 the server to a different network interface. It also does not remotely rewrite the clients'
 own connection settings.
 
-Korean UI labels require a Korean-capable font. The current RPi user has Noto Sans CJK KR in
-`~/.local/share/fonts`; install `fonts-noto-cjk` (system-wide or user-local) on a fresh image.
+Korean UI labels require a Korean-capable font (e.g. Noto Sans CJK KR).
 
 ## WebSocket contract
 

@@ -1,7 +1,7 @@
 # 사일로봇 결함탐지 v2 — crack / corrosion 세그멘테이션
 
 `steeldamage_v1`(단일클래스, mAP50 0.115) 실패 후 재구현. 배경·진단은
-`C:\Users\hylee\.claude\plans\lexical-twirling-sphinx.md` 참고.
+[docs/plan_cc_seg.md](docs/plan_cc_seg.md) 참고.
 
 - 클래스 2개: `0: crack`(균열), `1: corrosion`(부식)
 - 라벨: 인스턴스 세그멘테이션(폴리곤)
@@ -51,17 +51,16 @@ python local_test/onnx_parity_check.py --pt <best.pt> --onnx <best.onnx> --img <
 | `local_test/onnx_parity_check.py` | best.pt vs best.onnx 출력 대조 |
 | `local_test/webcam_demo.py` | 웹캠 실시간 추론 데모 (로컬 PyTorch, 육안 확인용) |
 | `docs/dataset_licenses.md` | 데이터셋 출처·라이선스 표 (보고서 부록) |
-| `inference/` | 실제 `jetson-orin-nano/inference/` 이식용 사본. crack detection 전용 원본에 마스크 폴리곤(`result.masks.xyn`) 처리 추가. 로컬 dry-run e2e 검증 + 실제 best.pt로 result_to_detections() 검증 완료 |
+| `inference/` | Orin 실시간 추론 코드. 2클래스 세그 마스크 폴리곤(`result.masks.xyn`) 처리 포함. 로컬 dry-run e2e 검증 + 실제 best.pt로 result_to_detections() 검증 완료 |
 | `inference/README.md` | Orin 보유자용 단독 실행 가이드 — 설치·엔진빌드(A안)·실행·트러블슈팅 |
 
 ## 상태 (2026-09-05 13:26)
 
 - **Colab 학습 완료** (`cc_seg_v1`, 중간에 한 번 끊겼다가 `resume=True`로 재개해 100 epoch 완주): test split **Mask mAP50 0.580** (crack 0.755 / corrosion 0.405 — corrosion은 Roboflow 증강 잡음 영향, Phase B에서 개선 예정). v1(mAP50 0.115, det만)과 비교해 대폭 개선.
 - `best.pt`/`best.onnx` 로컬 다운로드 완료(`runs/cc_seg_v1/weights/`). `local_test/run_local_infer.py`·`webcam_demo.py`로 로컬 검증 완료 — 실물 웹캠 실시간 데모까지 확인.
-- **Orin 배포 코드 작성 완료**: 실제 `jetson-orin-nano/inference/`를 기반으로 2클래스 세그(마스크 폴리곤) 처리 추가한 사본을 `inference/`에 작성. 로컬에서 실제 `best.pt`로 `result_to_detections()` 검증(Ultralytics 자체 렌더링과 좌표 일치 확인) + dry-run e2e(WebSocket 통신) 검증 완료.
+- **Orin 배포 코드 작성 완료**: `inference/`에 2클래스 세그(마스크 폴리곤) 처리 추가. 로컬에서 실제 `best.pt`로 `result_to_detections()` 검증(Ultralytics 자체 렌더링과 좌표 일치 확인) + dry-run e2e(WebSocket 통신) 검증 완료.
 - **엔진 변환은 A안 채택** — Orin 위에서 `YOLO(...).export(format='engine', half=True)`. `trtexec`는 문제 생겼을 때만 진단용으로 사용(불필요 시 안 씀).
 - **아직 Orin 실물이 없어 미검증**: RTSP 실수신, `.engine` 실빌드·실추론, 대시보드 연동. `inference/README.md`에 받았을 때 따라갈 순서를 정리해둠.
-- `Dataset/112.*` 삭제(287GB 회수), `steel_damage_dataset/`는 zip만 유지.
 - 상세 진행 이력: [docs/plan_cc_seg.md](docs/plan_cc_seg.md) "진행 현황"
 
 ## Phase B (9/8 이후)

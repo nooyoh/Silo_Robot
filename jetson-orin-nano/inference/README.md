@@ -1,14 +1,14 @@
 # inference/ — Jetson Orin Nano Super 실행 가이드
 
 crack/corrosion 세그멘테이션(YOLOv8s-seg, 2클래스) 모델을 Nano B01 RTSP 영상에 대해
-실시간 추론하고, 결과를 대시보드에 WebSocket으로 전송하는 코드. 이 폴더를 그대로
-`jetson-orin-nano` 레포의 `inference/`에 덮어써서 쓴다.
+실시간 추론하고, 결과를 대시보드에 WebSocket으로 전송하는 코드. Orin에서는 저장소의
+`jetson-orin-nano/` 폴더에서 실행한다.
 
 ---
 
 ## 0. 받아야 할 것
 
-- 이 `inference/` 폴더 전체
+- 이 저장소의 `jetson-orin-nano/` 폴더 (`inference/` 포함)
 - `best.pt` (Colab 학습 산출물) — Orin으로 옮겨서 **Orin 현지에서** 엔진으로 변환한다 (다른 장비에서 만든 엔진 파일은 Orin에서 못 씀)
   - 로컬 경로: `runs/cc_seg_v1/weights/best.pt`
   - Google Drive 경로: **내 드라이브 › YOLOv8s › silorobot_runs › cc_seg_v1 › weights › best.pt**

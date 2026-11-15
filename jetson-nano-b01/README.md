@@ -1,7 +1,7 @@
 # SiloRobot Jetson Nano B01
 
 ROS 2 robot-brain package for dashboard networking, STM32/IMU bridges, safety monitoring,
-odometry, coverage planning and low-speed path following. AI inference belongs to the Orin repo.
+odometry, coverage planning and low-speed path following. AI inference lives in `jetson-orin-nano/` of this repository.
 
 All bring-up and calibration commands are consolidated into one tool:
 

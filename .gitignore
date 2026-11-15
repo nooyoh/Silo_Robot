@@ -50,3 +50,86 @@ venv/
 Thumbs.db
 desktop.ini
 *.swp
+
+# ════════════════════════════════════════════════════════════════════════
+# 실행·빌드·플래시 후 생성되는 파일 (2026-11-15 추가)
+# ════════════════════════════════════════════════════════════════════════
+
+# ── 공통 빌드 산출물 (CMake / make / CubeIDE) ────────────────────────────
+build/
+cmake-build-*/
+Debug/
+Release/
+CMakeCache.txt
+CMakeFiles/
+compile_commands.json
+
+# ── stm32-f401re: 컴파일·링크·플래시 산출물 ─────────────────────────────
+*.o
+*.d
+*.su
+*.elf
+*.hex
+*.bin
+*.map
+*.list
+*.lst
+*.cyclo
+# CubeIDE 워크스페이스·디버그 실행 설정(사용자별)
+.metadata/
+stm32-f401re/.settings/
+*.launch
+# PC 단위시험 실행파일
+stm32-f401re/tests/test_main
+stm32-f401re/tests/test_main.exe
+
+# ── jetson-nano-b01: ROS2 colcon 산출물·보정 CSV ─────────────────────────
+jetson-nano-b01/install/
+jetson-nano-b01/log/
+jetson-nano-b01/calibration/
+
+# ── jetson-nano-b01/tools/verify: run.py가 만드는 공유 라이브러리·시험 바이너리 ─
+jetson-nano-b01/tools/verify/*.so
+jetson-nano-b01/tools/verify/*.dll
+jetson-nano-b01/tools/verify/*.dylib
+jetson-nano-b01/tools/verify/stm32_tests
+jetson-nano-b01/tools/verify/stm32_tests.exe
+
+# ── jetson-orin-nano: 학습·추론 부산물 ──────────────────────────────────
+# Ultralytics 기본 출력·자동 다운로드 위치 (실행 위치 어디서든 생김)
+runs/
+datasets/
+*.cache
+# 데이터셋 압축본·라벨 확인용 컨택트시트
+*.zip
+jetson-orin-nano/Dataset/
+_viz_*.jpg
+# Colab/Jupyter
+.ipynb_checkpoints/
+wandb/
+
+# ── rpi4-dashboard: Qt Creator 사용자 설정 ──────────────────────────────
+.qt/
+.qtcreator/
+*.user
+*.user.*
+*.autosave
+
+# ── 비밀정보 (Roboflow API 키 등) ───────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── 실행 로그·임시 파일 ─────────────────────────────────────────────────
+*.log
+*.tmp
+*.bak
+*~
+.pytest_cache/
+
+# ── 에디터·IDE ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+
+# ── docs: Obsidian 휴지통 ───────────────────────────────────────────────
+docs/.trash/

@@ -3,13 +3,10 @@
 NUCLEO-F401RE에서 모터 드라이버 2개(모터 4개)를 제어하는 베어메탈 펌웨어입니다.
 STM32CubeIDE + HAL을 사용하며, Jetson Nano B01과 ST-LINK VCP(USART2, 115200bps)로 통신합니다.
 
-> [!warning] 볼트에 남은 과거 코드 스냅샷
-> 개발·빌드에 사용하지 않는다. 최신 코드는 `D:\SiloRobot\stm32-controller`, 옵시디언 핀맵은
-> [[2. 하드웨어/05. 배선도]] 하나만 사용한다.
-
-현재 저장소에는 순수 C 제어 코어와 HAL 진입점의 과거 사본이 있습니다.
-ST 공식 STM32CubeF4 CMSIS/HAL 소스는 `ThirdParty/`에 포함돼
+순수 C 제어 코어(`App/`)와 HAL 진입점(`Core/`)으로 구성됩니다.
+빌드에 필요한 ST 공식 STM32CubeF4 CMSIS/HAL 소스는 `ThirdParty/`에 포함돼
 있으며, 별도의 Cube 패키지 다운로드 없이 ARM 빌드할 수 있습니다.
+핀 배치는 저장소 `docs/2. 하드웨어/05. 배선도.md`를 기준으로 합니다.
 
 ## 확정 프로토콜
 
@@ -22,8 +19,6 @@ ST 공식 STM32CubeF4 CMSIS/HAL 소스는 `ThirdParty/`에 포함돼
 ## ARM 펌웨어 빌드
 
 CubeIDE에서 `File > Import > Existing Projects into Workspace`로 이 폴더를 가져올 수 있습니다.
-Google Drive 폴더는 링커의 임시 파일 교체를 간헐적으로 막으므로 빌드 출력은 로컬 임시 폴더를
-권장합니다.
 
 ```powershell
 $env:PATH="<CubeIDE ARM GCC bin>;<CubeIDE make bin>;$env:PATH"
@@ -39,13 +34,10 @@ gcc -std=c11 -Wall -Wextra -Werror -IApp/Inc App/Src/*.c tests/test_main.c -o te
 ./tests/test_main.exe
 ```
 
-## 실물 연결 후 남은 작업
+## 남은 작업
 
 - 엔코더 핀은 실물 신호 확인 뒤 배정
-- UART RX 바이트를 `silo_protocol_push_byte()`에 전달
-- 1ms tick에서 `silo_controller_tick()` 호출
-- `SiloMotorOutput`을 실제 PWM compare/direction GPIO에 반영
-- ADC 원시값을 실측 보정된 mm 값으로 변환해 텔레메트리 전송
+- ADC 원시값을 실측 보정된 mm 값으로 변환해 텔레메트리 전송 (현재는 0 = 미측정으로 전송)
 
 ## 안전 동작
 
