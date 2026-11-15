@@ -36,31 +36,21 @@
 
 ## 🎬 동작영상
 
-[![사일로봇 작동 영상](https://img.youtube.com/vi/bZ3knwuHVz8/hqdefault.jpg)](https://youtu.be/bZ3knwuHVz8)
-
-▶ https://youtu.be/bZ3knwuHVz8
+<!-- 동작영상 추가 예정 -->
 
 ## 🏗️ 시스템 아키텍처
 
-![작품 구성도](docs/4.%20자료/02.%20보고서%20구성도/작품구성도_최종.png)
+### S/W 구성도
 
-```mermaid
-flowchart LR
-    RPi["🖥️ RPi4<br/>휴대용 관제 콘솔"]
-    Nano["🧠 Jetson Nano B01<br/>로봇 두뇌 (ROS2)"]
-    STM["⚙️ STM32 F401RE<br/>실시간 제어"]
-    Orin["🔍 Jetson Orin Nano<br/>AI 결함 탐지"]
-    M["🔩 모터 ×4<br/>엔코더·거리센서"]
+![S/W 구성도](docs/4.%20자료/05.%20결과보고서%20그림/SW_구성도.png)
 
-    RPi -- "WebSocket<br/>주행·정지 명령" --> Nano
-    Nano -- "WebSocket<br/>상태·텔레메트리" --> RPi
-    Nano -- "UART 20Hz" --> STM
-    STM -- "텔레메트리" --> Nano
-    STM --> M
-    Nano -- "RTSP 720p30" --> RPi
-    Nano -- "RTSP 720p30" --> Orin
-    Orin -- "WebSocket<br/>탐지 좌표·클래스" --> RPi
-```
+### H/W 구성도
+
+![H/W 구성도](docs/4.%20자료/05.%20결과보고서%20그림/HW_구성도.png)
+
+### 서비스 흐름도
+
+![서비스 흐름도](docs/4.%20자료/05.%20결과보고서%20그림/서비스_흐름도.png)
 
 **역할 분리** — AI 연산이나 관제 통신에 문제가 생겨도 실시간 제어와 안전 기능은 독립적으로 동작하도록 나눴습니다.
 
@@ -134,7 +124,7 @@ Silo_Robot/
 │  ├─ 1. 로그/            #   날짜별 개발·시험 기록
 │  ├─ 2. 하드웨어/        #   아키텍처·구동계·센서·전원·배선도
 │  ├─ 3. 소프트웨어/      #   STM32·젯슨·대시보드 명세, 노드·토픽·메시지 정본
-│  ├─ 4. 자료/            #   구성도·캡처·시장조사·원본 계획서
+│  ├─ 4. 자료/            #   결과보고서 그림·구성도·캡처·시장조사·원본 계획서
 │  └─ 5. 보고서/          #   공모전 보고서·제작설계서
 ├─ stm32-f401re/          # STM32 모터 제어 펌웨어 (App/, Core/, ThirdParty/)
 ├─ jetson-nano-b01/       # ROS2 패키지 silorobot_nano, 실행 스크립트, 오프로봇 검증 도구
