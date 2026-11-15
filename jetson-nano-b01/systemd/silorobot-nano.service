@@ -1,0 +1,22 @@
+# Copyright 2026 SiloRobot
+# Licensed under the Apache License, Version 2.0
+
+[Unit]
+Description=SiloRobot Nano B01 robot brain
+Wants=network-online.target
+After=network-online.target tailscaled.service
+
+[Service]
+Type=simple
+User=jetson
+Group=jetson
+SupplementaryGroups=dialout video
+WorkingDirectory=/home/jetson/jetson-nano-b01
+Environment=HOME=/home/jetson
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/bin/bash /home/jetson/jetson-nano-b01/scripts/silorobot-autostart.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

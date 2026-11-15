@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+  <name>silorobot-f401re</name>
+  <comment>SiloRobot NUCLEO-F401RE bare-metal HAL firmware</comment>
+  <projects></projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.cdt.make.core.makeBuilder</name>
+      <triggers>clean,full,incremental,</triggers>
+      <arguments></arguments>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.cdt.core.cnature</nature>
+    <nature>org.eclipse.cdt.make.core.makeNature</nature>
+  </natures>
+</projectDescription>
+

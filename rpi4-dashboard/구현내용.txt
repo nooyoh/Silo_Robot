@@ -1,0 +1,77 @@
+사일로봇 Raspberry Pi 4 대시보드 코드 정리
+=========================================
+
+1. 포함 기준
+- 저장소: https://github.com/SiloRobot/rpi4-dashboard
+- 브랜치: main
+- 포함 커밋: 23f225e7855e5a21b358d9e794464f710b8fedfa
+- 커밋 시각: 2026-08-24 22:43:51 +09:00
+- 최신 변경: 플래너 격자의 소수 단위 라벨 표시 수정
+- 이 폴더는 2026-10-09에 GitHub main의 추적 파일만 내보낸 복사본이다.
+  .git, build 디렉터리, 설정값, 점검 기록과 캐시는 포함하지 않았다.
+
+2. 장치 역할
+- Raspberry Pi 4와 800x480 7인치 터치스크린용 C++/Qt 6 관제 콘솔이다.
+- WebSocket 서버로 8765 포트를 열어 Jetson Nano B01과 Orin Nano의 접속을 받는다.
+- Nano RTSP 영상을 표시하고 Orin 탐지 박스를 재인코딩 없이 오버레이한다.
+- 터치 조작, 비상정지, 상태·센서·경로 표시와 점검 기록 저장을 담당한다.
+
+3. 구현된 주요 기능
+- Qt Quick 기반 800x480 산업용 터치 UI
+- 양손 사용을 고려한 좌측 throttle·우측 steering 조작 영역
+- throttle/turn -100~100 전송, 래치형 비상정지와 해제 피드백
+- 배터리, IMU, 3점 거리, 센서 유효성, 안전 상태 표시
+- Nano와 Orin 온라인 상태 및 연결 요약 표시
+- 경로 후보, 크기, 방향, waypoint, 실시간 pose, 진행률 표시
+- RTSP 영상과 정규화된 결함 박스 오버레이
+- Orin 연결이 끊기거나 3초 이상 새 탐지가 없으면 잔상 박스 즉시 제거
+- 프레임·계획·waypoint·pose·원시 센서·탐지 결과를 포함한 점검 기록
+- STOPPED 전환 시 SAFETY_STOP 기록 자동 생성, 기록 상세 보기와 삭제
+- 연결 주소·RTSP URL·WebSocket 포트를 QSettings에 저장
+- 화면 터치 URL 키보드와 연결 설정 팝업
+- 실제 결함 경보를 만들지 않는 --demo UI 검증 모드
+- 사용자 systemd 자동 실행 및 일시적인 Wayland/네트워크 실패 후 재시작
+
+4. 주요 경로
+- README.md: 빌드·연결·메시지 계약
+- CMakeLists.txt: Qt 6.5, C++17 빌드 설정
+- src/dashboardbackend.cpp/.h: WebSocket, 상태, 명령, 기록, 설정 로직
+- src/main.cpp: 실행 인자, RTSP, demo 모드와 QML 로딩
+- qml/MainIndustrial.qml: 전체 800x480 UI
+- qml/IndustrialAxis.qml: 터치 조작 축
+- run.sh: Wayland 환경에서 Release 바이너리 실행
+- scripts/install-autostart.sh: 사용자 서비스 설치
+- systemd/silorobot-dashboard.service: 그래픽 세션 자동 실행
+
+5. 빌드 및 실행 요약
+권장 배치 경로는 ~/rpi4-dashboard 이다.
+
+  cd ~/rpi4-dashboard
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+  cmake --build build -j2
+  ./build/silorobot-dashboard --demo
+
+Nano 영상과 실행:
+  ./build/silorobot-dashboard --rtsp rtsp://100.121.144.38:8554/robot
+
+자동 실행 설치:
+  bash scripts/install-autostart.sh
+  systemctl --user status silorobot-dashboard.service
+
+필요 구성:
+- Qt 6.5 Core, Gui, Quick, QuickControls2, Multimedia, WebSockets, DBus
+- Wayland 그래픽 세션
+- 한글 표시용 Noto Sans CJK KR 계열 폰트
+
+6. 기본 연결값
+- WebSocket 서버: 모든 인터페이스의 8765 포트
+- 표시/접속 주소: ws://100.74.141.112:8765
+- Nano RTSP: rtsp://100.121.144.38:8554/robot
+- 상단 연결 설정에서 값을 저장하면 다음 실행에도 재사용한다.
+
+7. 확인된 상태와 남은 작업
+- 2026-08-24 기록상 실기기에는 7a5c99c까지 Release native build와 서비스 기동이 확인됐다.
+- 이 폴더의 23f225e7은 그보다 한 커밋 새 버전이므로 실기기에 다시 배포하고 빌드해야 한다.
+- 실제 Nano/Orin과 연결한 뒤 영상, WebSocket, 경로 표시, 기록 저장 위치를 재확인해야 한다.
+- demo 모드는 UI 확인용이며 실제 센서나 AI 탐지 성능을 증명하지 않는다.
+

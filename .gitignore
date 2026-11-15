@@ -1,0 +1,52 @@
+# Silo_Robot 통합 저장소 .gitignore
+# 폴더 구조: docs/ · stm32-f401re/ · jetson-nano-b01/ · jetson-orin-nano/ · rpi4-dashboard/
+# 보드별 빌드 산출물은 각 모듈 폴더의 .gitignore에서 따로 관리한다.
+# (주의: .gitignore는 패턴 뒤에 같은 줄 주석을 못 씀 — 전부 패턴 문자열로 취급됨)
+
+# ── jetson-orin-nano: 데이터/모델 (크고 GitHub에 올리면 안 되는 것들) ─────────
+# 원본·가공 데이터셋 전체 (수백MB~GB, zip 포함) — Drive/AI Hub 등 원본 출처에서 재현
+jetson-orin-nano/Dataset/
+
+# Colab 학습 산출물 (가중치 수십~수백MB) — Google Drive(silorobot_runs)가 원본
+jetson-orin-nano/runs/
+
+# 모델 파일 (어디에 두든 전부 제외)
+*.pt
+*.onnx
+*.engine
+
+# Jetson 배포용 아티팩트·런타임 로그
+jetson-orin-nano/inference/artifacts/
+jetson-orin-nano/inference/logs/
+*.jsonl
+
+# 로컬 테스트 산출물
+jetson-orin-nano/local_test/_webcam_shots/
+jetson-orin-nano/local_test/_smoke/
+
+# ── rpi4-dashboard/webcam_demo: 로컬 웹캠+대시보드 데모 산출물 — 코드만 커밋 ──
+rpi4-dashboard/webcam_demo/dashboard/build/
+rpi4-dashboard/webcam_demo/live_frame*.jpg
+rpi4-dashboard/webcam_demo/live_frame*.tmp
+rpi4-dashboard/webcam_demo/*.log
+rpi4-dashboard/webcam_demo/_diag*/
+rpi4-dashboard/webcam_demo/__pycache__/
+
+# ── docs: Obsidian 볼트 설정 (사용자별 작업공간 상태) ──────────────────────
+.obsidian/
+
+# ── Python ───────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# ── Claude Code 로컬 설정 (사용자별, 공유 저장소에 안 올림) ──────────────────
+**/.claude/settings.local.json
+
+# ── OS/에디터 잡파일 ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp

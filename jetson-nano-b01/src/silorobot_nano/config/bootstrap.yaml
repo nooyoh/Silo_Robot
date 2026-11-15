@@ -1,0 +1,72 @@
+safety_supervisor:
+  ros__parameters:
+    startup_grace_ms: 1500
+    release_stable_ms: 500
+    distance_spread_warn_mm: 15.0
+    distance_spread_stop_mm: 30.0
+    distance_rate_stop_mm_s: 120.0
+    omega_warn_dps: 60.0
+    omega_stop_dps: 120.0
+    accel_deviation_g: 0.35
+    battery_release_mv: 10200
+
+odometry_node:
+  ros__parameters:
+    # 2026-08-21 밤 정정: 좌우 스케일은 반드시 **같은 부호**여야 한다. 한쪽만 음수로 두면
+    # 제자리 회전이 "직진"으로 기록된다 — 실측(순수 회전, left=+25912/right=-28131)을 대입하면
+    # 반대부호일 때 ds=0.39m·turn=6도(완전히 틀림), 같은부호일 때 ds=-0.02m·turn=-152도(정상).
+    # 이 반대부호 설정이 "로봇은 도는데 theta는 0 근처에서만 떨림"의 직접 원인이었다.
+    # (엔코더 재배선 후 좌우가 같은 규약이 됐으므로 raw 카운트는 순수회전 시 서로 반대부호가
+    #  나오는 게 정상이고, 그걸 그대로 빼면 회전이 제대로 잡힌다.)
+    # 부호는 반드시 좌우 **함께** 뒤집을 것(둘 다 음수 / 둘 다 양수). 한쪽만 뒤집으면 회전이
+    # 0으로 붕괴한다. 둘 다 음수인 이유: 실측에서 좌측 궤도가 전진할 때 카운트가 **감소**했다
+    # (우회전=좌 전진 시 left=-102600). 그래야 dl>0=전진이 되고, 우회전에서 theta가 감소하는
+    # (시계방향) 물리와도 맞는다 — path_follower의 조향 부호 수정이 이 규약을 전제로 한다.
+    # 이 부호와 조향 부호는 한 쌍이다: 여기를 뒤집으면 조향 부호도 같이 뒤집어야 한다.
+    # 확인 방법: ros2 run silorobot_nano verify_signs (전진/조향 한 번씩 밀면 판정해줌)
+    meters_per_count_left: -0.000014476541
+    meters_per_count_right: -0.000014476541
+    track_width_m: 0.294
+    # 회전 추정 소스: 1.0=엔코더 좌우차, 0.0=IMU 자이로.
+    #
+    # 시뮬레이션 실측(2x1m 경로 8m, 자이로 바이어스 0.2도/s 가정, 바이어스 보정 켠 상태):
+    #   슬립  |  엔코더(1.0)          |  자이로(0.0)
+    #    0%   |  0.146m              |  0.118m
+    #    4%   |  0.413m, 8초간 영역이탈 |  0.123m, 이탈 없음
+    #   15%   |  1.207m, 25초간 이탈   |  0.168m, 이탈 없음
+    # 엔코더는 궤도 슬립이 그대로 방향 오차가 되지만, 자이로는 슬립과 무관하다.
+    # 즉 **정확도만 보면 0.0이 낫다.**
+    #
+    # 그럼에도 1.0을 기본으로 두는 이유: 자이로를 쓰려면 IMU z축이 로봇 요축과 정렬돼 있어야
+    # 하는데 아직 실물로 확인 안 됐다. 축이 틀리면 조용히 완전히 틀린 방향으로 간다.
+    # 엔코더 경로는 2026-08-21에 실측으로 검증된 상태다.
+    #
+    # 0.0으로 바꾸는 절차: 로봇을 제자리 회전시켜 launch 로그에 "Heading sources disagree"
+    # 경고가 안 뜨는지 확인(뜨면 IMU 축이 틀린 것) -> 확인되면 이 값을 0.0으로.
+    encoder_alpha: 1.0
+
+path_follower:
+  ros__parameters:
+    control_hz: 20.0
+    # 2026-08-21 벤치 확인용으로 임시 완화(원래 0.05m/20deg). 도착 판정을 넉넉하게, 정렬
+    # 문턱값도 넓혀서 오차 근처에서 전진/정지가 반복되는 떨림을 줄인다. 실측 끝나면 되돌릴 것.
+    waypoint_radius_m: 0.15
+    # 2026-08-21 저녁: heading_gain=1.0 + max_turn=80은 순수 비례제어치고 응답이 너무 커서
+    # 목표각을 지나쳐 되돌아오는 진동(limit cycle)으로 안 멈추고 계속 흔들렸을 가능성이 있음
+    # (제어 루프 피드백 부호 자체는 실측 데이터로 검증 완료 — 문제 아님). 게인을 낮춰 오버슈트
+    # 여지를 줄임. STM32 펌웨어(`silo_motor_apply_deadzone`)가 0이 아닌 값은 항상 최소
+    # 120‰(12%)로 자동 보정하므로 "너무 작아서 안 움직인다"는 여기선 해당 안 됨 — 아래
+    # min_effective_* 는 보수적 안전장치일 뿐 핵심 수정은 아니었음.
+    heading_gain: 0.5
+    align_threshold_deg: 30.0
+    heading_deadband_deg: 5.0
+    max_throttle: 50.0
+    max_turn: 45.0
+    min_effective_throttle: 30.0
+    min_effective_turn: 30.0
+    # 자율 입력이 멎었는데 마지막 명령만 계속 갱신되는 고장 모드를 차단한다.
+    pose_timeout_ms: 500
+    safety_timeout_ms: 500
+    progress_timeout_sec: 4.0
+    min_progress_m: 0.005
+    min_progress_deg: 2.0

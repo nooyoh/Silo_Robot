@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2120" viewBox="0 0 1600 2120">
+  <defs>
+    <style>
+      text{font-family:"Malgun Gothic","Noto Sans KR",sans-serif;fill:#17232d}
+      .title{font-size:54px;font-weight:700}.sub{font-size:28px;font-weight:700}.body{font-size:25px}.small{font-size:21px}
+      .box{fill:#fff;stroke:#234a63;stroke-width:3}.soft{fill:#eaf6f8;stroke:#39758a;stroke-width:3}
+      .teal{fill:#d9f0ee;stroke:#24736f;stroke-width:3}.amber{fill:#fff4d9;stroke:#a66b16;stroke-width:3}
+      .danger{fill:#fde8e7;stroke:#a13e3a;stroke-width:3}.line{fill:none;stroke:#234a63;stroke-width:5}
+      .data{fill:none;stroke:#2d6f9f;stroke-width:5}.video{fill:none;stroke:#2f806d;stroke-width:5}
+      .safe{fill:none;stroke:#a13e3a;stroke-width:5}.muted{fill:#536672}.white{fill:#fff}
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#234a63"/></marker>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#2d6f9f"/></marker>
+    <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#2f806d"/></marker>
+    <marker id="arrowRed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#a13e3a"/></marker>
+  </defs>
+  <rect width="1600" height="2120" fill="#fff"/>
+  <rect x="40" y="35" width="1520" height="115" rx="14" fill="#d6eef2"/>
+  <text x="800" y="108" class="title" text-anchor="middle">사일로봇 철제 벽면 안전점검 시스템</text>
+
+  <text x="70" y="205" class="sub">1. 로봇 핵심 구조</text>
+  <rect x="70" y="235" width="1460" height="430" rx="20" class="soft"/>
+  <rect x="105" y="275" width="335" height="340" rx="20" fill="#d8e2e7" stroke="#657985" stroke-width="3"/>
+  <path d="M135 305 Q275 250 410 310 M135 375 Q275 320 410 380 M135 445 Q275 390 410 450 M135 515 Q275 460 410 520" fill="none" stroke="#96a8b2" stroke-width="9"/>
+  <text x="272" y="610" class="body" text-anchor="middle">철제 사일로 벽면</text>
+
+  <g transform="translate(205,315)">
+    <rect x="0" y="35" width="360" height="190" rx="24" fill="#f7fbfc" stroke="#173f57" stroke-width="5"/>
+    <rect x="-35" y="0" width="90" height="260" rx="40" fill="#405865"/><rect x="305" y="0" width="90" height="260" rx="40" fill="#405865"/>
+    <g fill="#d7a52b"><rect x="-18" y="35" width="56" height="36"/><rect x="-18" y="87" width="56" height="36"/><rect x="-18" y="139" width="56" height="36"/><rect x="-18" y="191" width="56" height="36"/>
+    <rect x="322" y="35" width="56" height="36"/><rect x="322" y="87" width="56" height="36"/><rect x="322" y="139" width="56" height="36"/><rect x="322" y="191" width="56" height="36"/></g>
+    <circle cx="180" cy="82" r="35" fill="#233b4b"/><circle cx="180" cy="82" r="15" fill="#69b7c8"/>
+    <rect x="95" y="137" width="170" height="54" rx="10" fill="#d9f0ee" stroke="#24736f" stroke-width="3"/>
+    <text x="180" y="173" class="small" text-anchor="middle">카메라 · LED</text>
+  </g>
+
+  <rect x="650" y="270" width="395" height="150" rx="16" class="teal"/>
+  <text x="847" y="320" class="sub" text-anchor="middle">부착·주행 구조</text>
+  <text x="680" y="365" class="body">• 할바흐 배열 자석 공극 조절</text>
+  <text x="680" y="402" class="body">• 곡률 적응형 궤도·서스펜션</text>
+
+  <rect x="1080" y="270" width="400" height="150" rx="16" class="teal"/>
+  <text x="1280" y="320" class="sub" text-anchor="middle">점검 센서</text>
+  <text x="1110" y="365" class="body">• CSI 카메라 · COB LED</text>
+  <text x="1110" y="402" class="body">• 거리센서 3점 · IMU · 엔코더</text>
+
+  <rect x="650" y="455" width="395" height="150" rx="16" class="amber"/>
+  <text x="847" y="505" class="sub" text-anchor="middle">주행 기능</text>
+  <text x="680" y="550" class="body">• 좌·우 궤도 독립 구동</text>
+  <text x="680" y="587" class="body">• 이동 조향 · 제자리 회전</text>
+
+  <rect x="1080" y="455" width="400" height="150" rx="16" class="danger"/>
+  <text x="1280" y="505" class="sub" text-anchor="middle">안전 기능</text>
+  <text x="1110" y="550" class="body">• 이격 위험 복합 판단</text>
+  <text x="1110" y="587" class="body">• 통신 타임아웃 · 정지 래치</text>
+
+  <text x="70" y="730" class="sub">2. 장치별 역할과 통신</text>
+  <rect x="70" y="760" width="1460" height="660" rx="20" fill="#f8fbfc" stroke="#91aab6" stroke-width="3"/>
+
+  <rect x="120" y="820" width="570" height="210" rx="18" class="box"/>
+  <rect x="120" y="820" width="570" height="65" rx="18" fill="#dceef5"/><rect x="120" y="867" width="570" height="18" fill="#dceef5"/>
+  <text x="405" y="865" class="sub" text-anchor="middle">STM32 | 실시간 제어</text>
+  <text x="155" y="930" class="body">모터 4채널 PWM·방향 · 엔코더 계수</text>
+  <text x="155" y="974" class="body">거리센서·배터리 ADC · 비상정지</text>
+  <text x="155" y="1015" class="small muted">통신 단절 시 300 ms 타임아웃으로 출력 차단</text>
+
+  <rect x="910" y="820" width="570" height="210" rx="18" class="box"/>
+  <rect x="910" y="820" width="570" height="65" rx="18" fill="#d9f0ee"/><rect x="910" y="867" width="570" height="18" fill="#d9f0ee"/>
+  <text x="1195" y="865" class="sub" text-anchor="middle">Jetson Nano B01 | 로봇 두뇌</text>
+  <text x="945" y="930" class="body">ROS2 노드 · 센서·오도메트리 · 경로추종</text>
+  <text x="945" y="974" class="body">CSI 카메라 RTSP 송출 · 장치 간 통신</text>
+  <text x="945" y="1015" class="small muted">전원 인가 시 로봇 기능과 영상 송출 자동 기동</text>
+
+  <path d="M690 925 L910 925" class="data" marker-end="url(#arrowBlue)"/>
+  <path d="M910 975 L690 975" class="data" marker-end="url(#arrowBlue)"/>
+  <text x="800" y="900" class="small" text-anchor="middle">UART 제어</text>
+  <text x="800" y="1012" class="small" text-anchor="middle">텔레메트리</text>
+
+  <rect x="120" y="1140" width="570" height="210" rx="18" class="box"/>
+  <rect x="120" y="1140" width="570" height="65" rx="18" fill="#fff0d4"/><rect x="120" y="1187" width="570" height="18" fill="#fff0d4"/>
+  <text x="405" y="1185" class="sub" text-anchor="middle">Jetson Orin Nano | AI 탐지</text>
+  <text x="155" y="1250" class="body">Nano RTSP 영상 수신 · YOLO 계열 추론</text>
+  <text x="155" y="1294" class="body">탐지 좌표·종류·신뢰도 · 결과 전송</text>
+  <text x="155" y="1335" class="small muted">균열 모델 학습·TensorRT 실추론은 후속 검증</text>
+
+  <rect x="910" y="1140" width="570" height="210" rx="18" class="box"/>
+  <rect x="910" y="1140" width="570" height="65" rx="18" fill="#e7e2f5"/><rect x="910" y="1187" width="570" height="18" fill="#e7e2f5"/>
+  <text x="1195" y="1185" class="sub" text-anchor="middle">RPi4 | 휴대용 관제 콘솔</text>
+  <text x="945" y="1250" class="body">실시간 영상·센서·안전상태 확인</text>
+  <text x="945" y="1294" class="body">주행·비상정지 · 경로 생성 · 점검기록</text>
+  <text x="945" y="1335" class="small muted">7인치 멀티터치 기반 현장 운용</text>
+
+  <path d="M1100 1030 C1080 1090 720 1090 650 1140" class="video" marker-end="url(#arrowGreen)"/>
+  <text x="800" y="1082" class="small" text-anchor="middle">RTSP 720p30 영상</text>
+  <path d="M1195 1030 L1195 1140" class="data" marker-end="url(#arrowBlue)"/>
+  <text x="1220" y="1092" class="small">WebSocket</text>
+  <path d="M690 1240 L910 1240" class="data" marker-end="url(#arrowBlue)"/>
+  <text x="800" y="1215" class="small" text-anchor="middle">탐지 결과</text>
+
+  <text x="70" y="1490" class="sub">3. 점검 서비스 흐름</text>
+  <rect x="70" y="1520" width="1460" height="355" rx="20" class="soft"/>
+  <g>
+    <rect x="105" y="1585" width="205" height="170" rx="18" class="box"/><circle cx="138" cy="1618" r="22" fill="#234a63"/><text x="138" y="1627" class="small white" text-anchor="middle">1</text>
+    <text x="207" y="1660" class="sub" text-anchor="middle">점검 준비</text><text x="207" y="1700" class="small" text-anchor="middle">범위·중첩률 입력</text><text x="207" y="1735" class="small" text-anchor="middle">경로 생성</text>
+    <rect x="360" y="1585" width="205" height="170" rx="18" class="box"/><circle cx="393" cy="1618" r="22" fill="#234a63"/><text x="393" y="1627" class="small white" text-anchor="middle">2</text>
+    <text x="462" y="1660" class="sub" text-anchor="middle">부착·주행</text><text x="462" y="1700" class="small" text-anchor="middle">자력 위치 설정</text><text x="462" y="1735" class="small" text-anchor="middle">벽면 이동</text>
+    <rect x="615" y="1585" width="205" height="170" rx="18" class="box"/><circle cx="648" cy="1618" r="22" fill="#24736f"/><text x="648" y="1627" class="small white" text-anchor="middle">3</text>
+    <text x="717" y="1660" class="sub" text-anchor="middle">촬영·감시</text><text x="717" y="1700" class="small" text-anchor="middle">근접 영상 수집</text><text x="717" y="1735" class="small" text-anchor="middle">IMU·거리 감시</text>
+    <rect x="870" y="1585" width="205" height="170" rx="18" class="danger"/><circle cx="903" cy="1618" r="22" fill="#a13e3a"/><text x="903" y="1627" class="small white" text-anchor="middle">4</text>
+    <text x="972" y="1660" class="sub" text-anchor="middle">위험 대응</text><text x="972" y="1700" class="small" text-anchor="middle">경고·출력 차단</text><text x="972" y="1735" class="small" text-anchor="middle">운용자 명시적 해제</text>
+    <rect x="1125" y="1585" width="205" height="170" rx="18" class="box"/><circle cx="1158" cy="1618" r="22" fill="#a66b16"/><text x="1158" y="1627" class="small white" text-anchor="middle">5</text>
+    <text x="1227" y="1660" class="sub" text-anchor="middle">AI·기록</text><text x="1227" y="1700" class="small" text-anchor="middle">균열 후보 탐지</text><text x="1227" y="1735" class="small" text-anchor="middle">결과·상태 저장</text>
+    <path d="M310 1670 H350" class="line" marker-end="url(#arrow)"/><path d="M565 1670 H605" class="line" marker-end="url(#arrow)"/><path d="M820 1670 H860" class="line" marker-end="url(#arrow)"/><path d="M1075 1670 H1115" class="line" marker-end="url(#arrow)"/>
+  </g>
+
+  <rect x="70" y="1930" width="1460" height="130" rx="20" fill="#edf5f7" stroke="#7d98a5" stroke-width="3"/>
+  <text x="800" y="1978" class="sub" text-anchor="middle">운용 원칙</text>
+  <text x="800" y="2025" class="body" text-anchor="middle">작업자 투입 전 원격 선행점검 · 법정 안전조치와 정밀검사를 대체하지 않는 보조 장비</text>
+</svg>

@@ -1,0 +1,6 @@
+# Build artifacts produced by run.py
+*.dll
+*.so
+stm32_tests
+stm32_tests.exe
+__pycache__/

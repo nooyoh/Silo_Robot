@@ -1,0 +1,78 @@
+사일로봇 Jetson Nano B01 코드 정리
+================================
+
+1. 포함 기준
+- 저장소: https://github.com/SiloRobot/jetson-nano-b01
+- 브랜치: main
+- 포함 커밋: 7d07a38b120ebfcdafac948ebced644218880b01
+- 커밋 시각: 2026-08-24 22:43:45 +09:00
+- 최신 변경: 사각 시연 동작과 대시보드 플래너 표시 동기화
+- 이 폴더는 2026-10-09에 GitHub main의 추적 파일만 내보낸 복사본이다.
+  .git, build, install, log, 캐시와 장치별 측정 데이터는 포함하지 않았다.
+
+2. 장치 역할
+- 로봇 본체의 두뇌 역할을 하는 Jetson Nano B01용 ROS 2 Eloquent 패키지다.
+- STM32와 UART로 통신해 모터 명령을 보내고 거리·엔코더·배터리 텔레메트리를 받는다.
+- WT901C IMU를 읽고 안전 상태, 오도메트리, 커버리지 경로와 저속 경로 추종을 처리한다.
+- CSI 카메라 영상을 RTSP 720p30 목표로 송출한다.
+- Raspberry Pi 대시보드의 WebSocket 서버에 상태를 보내고 조작 명령을 받는다.
+- AI 결함 추론은 이 장치가 아니라 Jetson Orin Nano 코드가 담당한다.
+
+3. 구현된 주요 기능
+- dashboard_bridge: WebSocket 상태 전송, 수동 이동·정지·경로 명령 수신
+- stm32_uart_bridge: STM32 제어 프레임 송신 및 거리/엔코더/배터리 프레임 파싱
+- imu_node: WT901C 프레임 파싱, 자세·각속도·가속도와 상태 발행
+- safety_supervisor: 센서 stale/위험/정지 래치와 해제 조건 관리
+- odometry_node: 좌우 엔코더와 IMU를 이용한 위치 추정
+- coverage_planner: 사일로 전개면 커버리지 경로 생성
+- path_follower: 수동 모드와 충돌하지 않는 저속 반자율 경로 추종
+- camera_rtsp_server: CSI 카메라 RTSP 서버
+- calibration_collector/report 및 watch/verify 도구: 거리 LUT, 엔코더, 회전 방향 보정
+- demo-drive: 센서 미완성 상태의 명시적 시연 모드
+- demo-square: 0.5 x 0.5 m 표시와 동기화된 약 10초 오픈루프 촬영용 사각 시연
+- systemd 자동 실행과 하드웨어/네트워크 사전 점검 스크립트
+- 오프로봇 프로토콜·반자율·시연 계약 시험 도구
+
+4. 안전 관련 동작
+- 정상 기본값은 armed=false이며 거리 보정 확인도 false다.
+- dashboard 비상정지, STM32 부팅 정지 래치와 300 ms 통신 타임아웃은 유지된다.
+- 배터리 감시가 활성화된 경우 두 팩 중 낮은 전압을 대표값으로 사용하며,
+  잘못된 값은 실제 전압처럼 표시하지 않는다.
+- demo-drive/demo-square는 벽면 주행용이 아니다. 평지 또는 구속된 시험 환경에서만 사용한다.
+- bootstrap 오도메트리 값은 추정치이므로 실측 보정 없이는 실제 거리 정확도를 보장하지 않는다.
+
+5. 주요 경로
+- README.md: 전체 사용법과 안전 주의사항
+- scripts/silorobot.sh: build, preflight, run, 보정, 시험, 시연 통합 메뉴
+- src/silorobot_nano/launch/robot.launch.py: 전체 ROS 노드 실행 진입점
+- src/silorobot_nano/silorobot_nano/: 기능별 Python ROS 노드
+- src/silorobot_nano/config/: bootstrap 및 실측 설정 템플릿
+- tools/verify/: 실제 배포 코드 기반 오프로봇 검증
+- systemd/silorobot-nano.service: 부팅 자동 실행 서비스
+
+6. 설치 및 실행 요약
+  sudo apt update
+  sudo apt install python3-serial python3-websockets python3-gi gir1.2-gst-rtsp-server-1.0
+  bash scripts/silorobot.sh build
+  bash scripts/silorobot.sh preflight
+  bash scripts/silorobot.sh run
+
+자동 실행 최초 설치:
+  sudo install -m 644 systemd/silorobot-nano.service /etc/systemd/system/silorobot-nano.service
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now silorobot-nano.service
+
+7. 기본 연결값
+- 대시보드: ws://100.74.141.112:8765
+- STM32: /dev/ttyACM0, 115200 bps
+- IMU: /dev/ttyTHS1, 9600 bps
+- RTSP 제공: rtsp://<Nano Tailscale IP>:8554/robot
+- 환경변수 STM_PORT, IMU_PORT, DASHBOARD_HOST, WS_PORT, ROS_SETUP으로 변경 가능
+
+8. 확인된 상태와 남은 작업
+- 2026-08-24 기록상 실기기에는 ddf1b59까지 배포·빌드·서비스 기동이 확인됐다.
+- 이 폴더의 7d07a38b는 그보다 두 커밋 새 버전이므로 실기기에 다시 배포하고 빌드해야 한다.
+- 거리센서 LUT, 좌우 meters/count, track width, IMU 축/바이어스는 실물 보정이 필요하다.
+- 조립 상태 부하 주행, 벽면 등반, 실제 면적 커버리지 검증은 완료 기록이 없다.
+- STM32 펌웨어는 별도 SiloRobot/stm32-controller 저장소이며 이번 3장치 묶음에는 포함하지 않았다.
+

@@ -1,0 +1,43 @@
+# Copy to measured.yaml and replace every ESTIMATE value after field tests.
+safety_supervisor:
+  ros__parameters:
+    startup_grace_ms: 1500
+    release_stable_ms: 500
+    distance_spread_warn_mm: 15.0
+    distance_spread_stop_mm: 30.0
+    distance_rate_stop_mm_s: 120.0
+    omega_warn_dps: 60.0
+    omega_stop_dps: 120.0
+    accel_deviation_g: 0.35
+    battery_release_mv: 10200
+
+odometry_node:
+  ros__parameters:
+    # Both scales MUST share a sign. Opposite signs make a pure spin integrate as pure
+    # translation (verified against real counts, 2026-08-21) — turn collapses to near zero
+    # while ds picks up the whole motion, so heading never tracks and following never
+    # converges. Both signs are confirmed from the 2026-08-21 real drivetrain test;
+    # only the magnitude remains an ESTIMATE until the five-run 1 m calibration.
+    meters_per_count_left: -0.000014476541
+    meters_per_count_right: -0.000014476541
+    track_width_m: 0.294
+    encoder_alpha: 1.0
+
+path_follower:
+  ros__parameters:
+    control_hz: 20.0
+    # Theory/bootstrap values that already complete the closed-loop simulation.
+    # Replace them only after assembled-load tuning.
+    waypoint_radius_m: 0.15
+    heading_gain: 0.5
+    align_threshold_deg: 30.0
+    heading_deadband_deg: 5.0
+    min_effective_throttle: 30.0
+    min_effective_turn: 30.0
+    max_throttle: 50.0
+    max_turn: 45.0
+    pose_timeout_ms: 500
+    safety_timeout_ms: 500
+    progress_timeout_sec: 4.0
+    min_progress_m: 0.005
+    min_progress_deg: 2.0
